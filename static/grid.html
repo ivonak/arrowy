@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grid Playground</title>
+<link rel="stylesheet" href="./styles/grid.css">
+</head>
+<body>
+  <div id="gridCanvas" aria-hidden="true">
+    <canvas id="grid"></canvas>
+  </div>
+
+  <aside id="panel">
+    <div class="panel-header">
+      <h1>Grid Playground</h1>
+      <p>Tune your animated background grid.</p>
+    </div>
+
+    <div class="panel-body">
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)"><span class="section-title">Colors</span><span class="section-chevron">&#9660;</span></div>
+        <div class="section-content">
+          <div class="control"><div class="colors-grid">
+            <div class="color-item"><div class="row"><label for="bgStart">Gradient start</label></div><input id="bgStart" type="color" value="#1a1a2e"></div>
+            <div class="color-item"><div class="row"><label for="bgMid">Gradient middle</label></div><input id="bgMid" type="color" value="#16213e"></div>
+            <div class="color-item"><div class="row"><label for="bgEnd">Gradient end</label></div><input id="bgEnd" type="color" value="#0f3460"></div>
+            <div class="color-item"><div class="row"><label for="dotColor">Dot color</label></div><input id="dotColor" type="color" value="#ffffff"></div>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)"><span class="section-title">Dots</span><span class="section-chevron">&#9660;</span></div>
+        <div class="section-content">
+          <div class="control"><div class="row"><label for="dotOpacity">Dot base opacity</label><span class="value" id="dotOpacityValue"></span></div><input id="dotOpacity" type="range" min="0.01" max="0.25" step="0.01" value="0.06"></div>
+          <div class="control"><div class="row"><label for="dotFinalOpacity">Dot final opacity</label><span class="value" id="dotFinalOpacityValue"></span></div><input id="dotFinalOpacity" type="range" min="0.05" max="1" step="0.01" value="0.55"></div>
+          <div class="control"><div class="row"><label for="gridSpacing">Grid spacing</label><span class="value" id="gridSpacingValue"></span></div><input id="gridSpacing" type="range" min="10" max="60" step="1" value="24"></div>
+          <div class="control"><div class="row"><label for="dotSize">Dot size</label><span class="value" id="dotSizeValue"></span></div><input id="dotSize" type="range" min="0.6" max="2.4" step="0.1" value="1"></div>
+          <div class="control"><div class="row"><label for="dotSharpness">Dot sharpness</label><span class="value" id="dotSharpnessValue"></span></div><input id="dotSharpness" type="range" min="0.6" max="2.2" step="0.01" value="1.3"></div>
+        </div>
+      </div>
+
+      <div class="section collapsed">
+        <div class="section-header" onclick="toggleSection(this)"><span class="section-title">Deformation</span><span class="section-chevron">&#9660;</span></div>
+        <div class="section-content">
+          <div class="control"><div class="row"><label for="shapeType">Shape</label></div>
+            <select id="shapeType">
+              <option value="circle">Circle</option>
+              <option value="ellipse">Ellipse</option>
+              <option value="roundedSquare">Rounded square</option>
+              <option value="randomBlob">Random blob</option>
+            </select>
+          </div>
+          <div class="control"><div class="row"><label for="influenceRadius">Influence radius</label><span class="value" id="influenceRadiusValue"></span></div><input id="influenceRadius" type="range" min="40" max="420" step="2" value="180"></div>
+          <div class="control"><div class="row"><label for="shapeStretchX">Shape stretch X</label><span class="value" id="shapeStretchXValue"></span></div><input id="shapeStretchX" type="range" min="0.6" max="1.6" step="0.01" value="1.00"></div>
+          <div class="control"><div class="row"><label for="shapeStretchY">Shape stretch Y</label><span class="value" id="shapeStretchYValue"></span></div><input id="shapeStretchY" type="range" min="0.6" max="1.6" step="0.01" value="1.00"></div>
+          <div class="control"><div class="row"><label for="ballRoundness">Ball roundness</label><span class="value" id="ballRoundnessValue"></span></div><input id="ballRoundness" type="range" min="0" max="1.2" step="0.01" value="0.7"></div>
+          <div class="control"><div class="row"><label for="compressionStrength">Compression strength</label><span class="value" id="compressionStrengthValue"></span></div><input id="compressionStrength" type="range" min="0" max="1.2" step="0.01" value="0.62"></div>
+          <div class="control"><div class="row"><label for="dotSeparation">Dot separation (local)</label><span class="value" id="dotSeparationValue"></span></div><input id="dotSeparation" type="range" min="0.75" max="1.8" step="0.01" value="1.05"></div>
+          <div class="control"><div class="row"><label for="blobLobes">Blob lobes</label><span class="value" id="blobLobesValue"></span></div><input id="blobLobes" type="range" min="2" max="12" step="1" value="6"></div>
+          <div class="control"><div class="row"><label for="blobJaggedness">Blob jaggedness</label><span class="value" id="blobJaggednessValue"></span></div><input id="blobJaggedness" type="range" min="0" max="0.8" step="0.01" value="0.25"></div>
+          <div class="control"><div class="row"><label for="blobScale">Blob scale</label><span class="value" id="blobScaleValue"></span></div><input id="blobScale" type="range" min="0.6" max="1.4" step="0.01" value="1.00"></div>
+          <div class="control"><button class="btn" id="regenBlobBtn" type="button">Regenerate blob</button></div>
+        </div>
+      </div>
+
+      <div class="section collapsed">
+        <div class="section-header" onclick="toggleSection(this)"><span class="section-title">Grain</span><span class="section-chevron">&#9660;</span></div>
+        <div class="section-content">
+          <div class="control"><div class="row"><label for="grainEnabled">Enable</label></div><input id="grainEnabled" type="checkbox" checked></div>
+          <div class="control"><div class="colors-grid grain-colors-grid">
+            <div class="color-item"><div class="row"><label for="grainBackColor">Back color</label></div><input id="grainBackColor" type="color" value="#6f7fa8"></div>
+            <div class="color-swap-wrap">
+              <button class="icon-swap-btn" id="invertGrainColorsBtn" type="button" aria-label="Invert back and front colors" title="Invert colors">&#8646;</button>
+            </div>
+            <div class="color-item"><div class="row"><label for="grainFrontColor">Front color</label></div><input id="grainFrontColor" type="color" value="#ffffff"></div>
+          </div></div>
+          <div class="control"><div class="row"><label for="grainBackOpacity">Back opacity</label><span class="value" id="grainBackOpacityValue"></span></div><input id="grainBackOpacity" type="range" min="0" max="1.5" step="0.01" value="1.00"></div>
+          <div class="control"><div class="row"><label for="grainFrontOpacity">Front opacity</label><span class="value" id="grainFrontOpacityValue"></span></div><input id="grainFrontOpacity" type="range" min="0" max="1.5" step="0.01" value="1.00"></div>
+          <div class="control">
+            <div class="mode-grid">
+              <div class="mode-item">
+                <div class="row"><label for="grainBgMode">Background mode</label></div>
+                <select id="grainBgMode">
+                  <option value="dark">Dark</option>
+                  <option value="light">Light</option>
+                </select>
+              </div>
+              <div class="mode-item">
+                <div class="row"><label for="grainBlendMode">Blend mode</label></div>
+                <select id="grainBlendMode">
+                  <option value="normal">Normal</option>
+                  <option value="screen">Screen</option>
+                  <option value="add">Add</option>
+                  <option value="multiply">Multiply</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="control"><div class="row"><label for="grainAmount">Amount</label><span class="value" id="grainAmountValue"></span></div><input id="grainAmount" type="range" min="0" max="1" step="0.01" value="0.35"></div>
+          <div class="control"><div class="row"><label for="grainSpread">Spread</label><span class="value" id="grainSpreadValue"></span></div><input id="grainSpread" type="range" min="0" max="1.5" step="0.01" value="0.35"></div>
+          <div class="control"><div class="row"><label for="grainBias">Bias (-back / +front)</label><span class="value" id="grainBiasValue"></span></div><input id="grainBias" type="range" min="-1" max="1" step="0.01" value="0.35"></div>
+          <div class="control"><div class="row"><label for="grainOffset">Offset</label><span class="value" id="grainOffsetValue"></span></div><input id="grainOffset" type="range" min="-2" max="2" step="0.01" value="0.35"></div>
+          <div class="control"><div class="row"><label for="grainIntensity">Intensity</label><span class="value" id="grainIntensityValue"></span></div><input id="grainIntensity" type="range" min="0.01" max="0.5" step="0.01" value="0.15"></div>
+          <div class="control"><div class="row"><label for="grainRadialFalloff">Radial falloff</label><span class="value" id="grainRadialFalloffValue"></span></div><input id="grainRadialFalloff" type="range" min="0.5" max="12" step="0.1" value="2.0"></div>
+          <div class="control"><div class="row"><label for="grainEdgeSteepness">Edge steepness</label><span class="value" id="grainEdgeSteepnessValue"></span></div><input id="grainEdgeSteepness" type="range" min="0.3" max="5" step="0.05" value="1.0"></div>
+          <div class="control"><div class="row"><label for="grainDensityScale">Density</label><span class="value" id="grainDensityScaleValue"></span></div><input id="grainDensityScale" type="range" min="0.02" max="1" step="0.01" value="1.0"></div>
+          <div class="control"><div class="row"><label for="grainFalloffOnset">Falloff onset</label><span class="value" id="grainFalloffOnsetValue"></span></div><input id="grainFalloffOnset" type="range" min="0" max="1" step="0.01" value="1.0"></div>
+        </div>
+      </div>
+
+      <div class="section collapsed">
+        <div class="section-header" onclick="toggleSection(this)"><span class="section-title">Motion</span><span class="section-chevron">&#9660;</span></div>
+        <div class="section-content">
+          <div class="control"><div class="row"><label for="motionSpeed">Motion speed</label><span class="value" id="motionSpeedValue"></span></div><input id="motionSpeed" type="range" min="0.01" max="1.4" step="0.005" value="0.55"></div>
+          <div class="control"><div class="row"><label for="waveAmount">Wave amount</label><span class="value" id="waveAmountValue"></span></div><input id="waveAmount" type="range" min="0.04" max="0.34" step="0.01" value="0.14"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)"><span class="section-title">Actions</span><span class="section-chevron">&#9660;</span></div>
+        <div class="section-content">
+          <button class="btn" id="resetBtn" type="button">Reset defaults</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)"><span class="section-title">Presets</span><span class="section-chevron">&#9660;</span></div>
+        <div class="section-content">
+          <div class="control">
+            <div class="row">
+              <label for="presetName">Preset name</label>
+            </div>
+            <input id="presetName" type="text" placeholder="e.g. Soft moon">
+          </div>
+          <div class="control">
+            <button class="btn" id="savePresetBtn" type="button">Save current as preset</button>
+          </div>
+          <div class="control">
+            <div class="row"><label for="presetList">Saved presets</label></div>
+            <select id="presetList" size="6"></select>
+          </div>
+          <div class="control preset-actions">
+            <button class="btn" id="loadPresetBtn" type="button">Load</button>
+            <button class="btn" id="overwritePresetBtn" type="button">Overwrite</button>
+            <button class="btn" id="renamePresetBtn" type="button">Rename</button>
+            <button class="btn" id="deletePresetBtn" type="button">Delete</button>
+          </div>
+          <div class="control">
+            <div id="presetStatus" class="preset-status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <script src="./js/grid/shaders.js"></script>
+  <script src="./js/grid/app.js"></script>
+</body>
+</html>
