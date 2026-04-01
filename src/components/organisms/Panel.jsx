@@ -1,4 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
+import Button from '../atoms/Button';
+import ChevronLeftIcon from '../atoms/icons/ChevronLeftIcon';
+import ChevronRightIcon from '../atoms/icons/ChevronRightIcon';
 
 const STORAGE_KEY = 'panel_collapsed';
 
@@ -21,15 +24,9 @@ export const PANEL_WIDTH = 318;
 export default function Panel({ title, subtitle, children, footer, collapsed, onToggleCollapsed }) {
   if (collapsed) {
     return (
-      <button
-        onClick={onToggleCollapsed}
-        className="fixed top-3 right-3 z-[100] w-8 h-8 flex items-center justify-center rounded-lg bg-panel/80 backdrop-blur-md border border-panel-border text-text-dim hover:text-white cursor-pointer transition-colors"
-        aria-label="Expand panel"
-      >
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-          <path d="M9 3L5 7L9 11" />
-        </svg>
-      </button>
+      <Button variant="ghost" size="icon-md" onClick={onToggleCollapsed} title="Expand panel" className="fixed top-3 right-3 z-[100] rounded-lg bg-panel/80 backdrop-blur-md border border-panel-border">
+        <ChevronLeftIcon />
+      </Button>
     );
   }
 
@@ -42,15 +39,9 @@ export default function Panel({ title, subtitle, children, footer, collapsed, on
             <p className="text-[10px] text-text-muted">{subtitle}</p>
           )}
         </div>
-        <button
-          onClick={onToggleCollapsed}
-          className="mt-0.5 w-6 h-6 flex items-center justify-center rounded text-text-dim hover:text-white cursor-pointer transition-colors shrink-0"
-          aria-label="Collapse panel"
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-            <path d="M5 3L9 7L5 11" />
-          </svg>
-        </button>
+        <Button variant="ghost" size="icon-sm" onClick={onToggleCollapsed} title="Collapse panel" className="mt-0.5">
+          <ChevronRightIcon />
+        </Button>
       </div>
       <div className="flex-1 overflow-y-auto pb-[70px]">
         {children}

@@ -1,67 +1,14 @@
-import Panel from '../../components/Panel';
-import Section from '../../components/Section';
-import Slider from '../../components/Slider';
-import Toggle from '../../components/Toggle';
-import ColorPicker from '../../components/ColorPicker';
-import Select from '../../components/Select';
-import Button from '../../components/Button';
-import AnchorGrid from '../../components/AnchorGrid';
-import Tabs from '../../components/Tabs';
+import Panel from '../../components/organisms/Panel';
+import Section from '../../components/organisms/Section';
+import Slider from '../../components/molecules/Slider';
+import ColorPicker from '../../components/molecules/ColorPicker';
+import Select from '../../components/molecules/Select';
+import Button from '../../components/atoms/Button';
+import Tabs from '../../components/molecules/Tabs';
+import NumberField from '../../components/molecules/NumberField';
+import ToggleRow from '../../components/molecules/ToggleRow';
+import AnchorBlock from './AnchorBlock';
 import { PARAM_GROUPS } from './useArrowyRenderer';
-
-function ToggleRow({ label, value, onChange }) {
-  return (
-    <div className="flex items-center justify-between py-1">
-      <span className="text-[11px] text-white/68">{label}</span>
-      <Toggle value={value} onChange={onChange} />
-    </div>
-  );
-}
-
-function AnchorBlock({ title, anchorPoint, onAnchorChange, offsetX, offsetXSide, offsetY, offsetYSide, onOffsetChange }) {
-  return (
-    <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-[18px] gap-y-1.5 items-start py-3">
-      <div className="col-span-2 text-[10px] text-text-dim tracking-wide">{title}</div>
-      <div className="col-start-1 row-start-2 row-span-2">
-        <AnchorGrid value={anchorPoint} onChange={onAnchorChange} />
-      </div>
-      <div className="flex items-center gap-[5px]">
-        <label className="text-[10px] text-text-dim whitespace-nowrap">X offset</label>
-        <select
-          value={offsetXSide}
-          onChange={(e) => onOffsetChange('xSide', e.target.value)}
-          className="w-[58px] bg-surface border border-panel-border rounded text-text text-[10px] px-[5px] py-[3px]"
-        >
-          <option value="left">left</option>
-          <option value="right">right</option>
-        </select>
-        <input
-          type="number"
-          value={offsetX}
-          onChange={(e) => onOffsetChange('x', parseInt(e.target.value) || 0)}
-          className="w-12 bg-surface border border-panel-border rounded text-text text-[10px] px-[5px] py-[3px] text-center"
-        />
-      </div>
-      <div className="flex items-center gap-[5px]">
-        <label className="text-[10px] text-text-dim whitespace-nowrap">Y offset</label>
-        <select
-          value={offsetYSide}
-          onChange={(e) => onOffsetChange('ySide', e.target.value)}
-          className="w-[58px] bg-surface border border-panel-border rounded text-text text-[10px] px-[5px] py-[3px]"
-        >
-          <option value="top">top</option>
-          <option value="bottom">bottom</option>
-        </select>
-        <input
-          type="number"
-          value={offsetY}
-          onChange={(e) => onOffsetChange('y', parseInt(e.target.value) || 0)}
-          className="w-12 bg-surface border border-panel-border rounded text-text text-[10px] px-[5px] py-[3px] text-center"
-        />
-      </div>
-    </div>
-  );
-}
 
 export default function ArrowyPanel({
   features, onFeatureToggle, onThemeToggle,
@@ -84,9 +31,9 @@ export default function ArrowyPanel({
       onToggleCollapsed={onToggleCollapsed}
       footer={
         <div className="flex gap-[5px] flex-wrap">
-          <Button label="Copy Values" variant="small" onClick={onCopyValues} />
-          <Button label="Get Code" variant="small" onClick={onGetCode} className="!bg-accent-bg !border-accent-border !text-accent hover:!bg-accent-dim" />
-          <Button label="Reset" variant="small" onClick={onReset} />
+          <Button size="sm" onClick={onCopyValues}>Copy Values</Button>
+          <Button variant="primary" size="sm" onClick={onGetCode}>Get Code</Button>
+          <Button size="sm" onClick={onReset}>Reset</Button>
         </div>
       }
     >
@@ -104,20 +51,12 @@ export default function ArrowyPanel({
       <Section title="Grid Animation" defaultOpen={false}>
         <div className="space-y-1.5">
           {[['Speed A', 'speedA'], ['Speed B', 'speedB'], ['Speed C', 'speedC'], ['Speed D', 'speedD']].map(([label, key]) => (
-            <div key={key} className="flex items-center justify-between">
-              <label className="text-[11px] text-text-dim">{label}</label>
-              <input type="number" min={1} max={20} step={0.1} value={gridAnim[key]}
-                onChange={(e) => onGridAnimChange(key, parseFloat(e.target.value))}
-                className="w-[70px] bg-surface border border-panel-border rounded text-text text-[11px] px-1.5 py-1 text-center" />
-            </div>
+            <NumberField key={key} label={label} value={gridAnim[key]} min={1} max={20} step={0.1}
+              onChange={(v) => onGridAnimChange(key, v)} />
           ))}
           {[['Opacity min', 'opacityLow'], ['Opacity max', 'opacityHigh']].map(([label, key]) => (
-            <div key={key} className="flex items-center justify-between">
-              <label className="text-[11px] text-text-dim">{label}</label>
-              <input type="number" min={0} max={1} step={0.01} value={gridAnim[key]}
-                onChange={(e) => onGridAnimChange(key, parseFloat(e.target.value))}
-                className="w-[70px] bg-surface border border-panel-border rounded text-text text-[11px] px-1.5 py-1 text-center" />
-            </div>
+            <NumberField key={key} label={label} value={gridAnim[key]} min={0} max={1} step={0.01}
+              onChange={(v) => onGridAnimChange(key, v)} />
           ))}
         </div>
       </Section>
@@ -159,20 +98,10 @@ export default function ArrowyPanel({
       {/* Breakpoints */}
       <Section title="Breakpoints" defaultOpen={false}>
         {[['Min width', 'minWidth'], ['Grow start', 'growStart'], ['Max width', 'maxWidth']].map(([label, key]) => (
-          <div key={key} className="flex items-center justify-between mb-1.5">
-            <label className="text-[11px] text-text-dim">{label}</label>
-            <input type="number" value={breakpoints[key]}
-              onChange={(e) => onBreakpointChange(key, parseInt(e.target.value) || 0)}
-              className="w-[70px] bg-surface border border-panel-border rounded text-text text-[11px] px-1.5 py-1 text-center" />
-          </div>
+          <NumberField key={key} label={label} value={breakpoints[key]} onChange={(v) => onBreakpointChange(key, v)} className="mb-1.5" />
         ))}
         {features.scroll && [['Scroll start', 'scrollStart'], ['Scroll hide', 'scrollHide']].map(([label, key]) => (
-          <div key={key} className="flex items-center justify-between mb-1.5">
-            <label className="text-[11px] text-text-dim">{label}</label>
-            <input type="number" value={breakpoints[key]}
-              onChange={(e) => onBreakpointChange(key, parseInt(e.target.value) || 0)}
-              className="w-[70px] bg-surface border border-panel-border rounded text-text text-[11px] px-1.5 py-1 text-center" />
-          </div>
+          <NumberField key={key} label={label} value={breakpoints[key]} onChange={(v) => onBreakpointChange(key, v)} className="mb-1.5" />
         ))}
       </Section>
 
@@ -221,7 +150,7 @@ export default function ArrowyPanel({
         )}
         <Slider label="Stroke width" value={draw.strokeWidth} min={1} max={10} step={0.5} onChange={(v) => onDrawChange('strokeWidth', v)} />
         <Slider label="Opacity" value={draw.opacity} min={0} max={1} step={0.05} onChange={(v) => onDrawChange('opacity', v)} />
-        <Button label="Preview Draw Animation" variant="small" onClick={onPreviewDraw} />
+        <Button size="sm" onClick={onPreviewDraw}>Preview Draw Animation</Button>
       </Section>
     </Panel>
   );

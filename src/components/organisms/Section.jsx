@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
-import Toggle from './Toggle';
+import Toggle from '../atoms/Toggle';
+import ChevronIcon from '../atoms/icons/ChevronIcon';
 
 export default function Section({ title, defaultOpen = true, toggle, toggleValue, onToggleChange, children }) {
   const [open, setOpen] = useState(defaultOpen);
@@ -24,13 +25,7 @@ export default function Section({ title, defaultOpen = true, toggle, toggleValue
             </div>
           )}
         </div>
-        <span
-          className={`text-[10px] text-white/30 transition-transform duration-200 ${
-            open ? '' : '-rotate-90'
-          }`}
-        >
-          ▾
-        </span>
+        <ChevronIcon className={`w-2.5 h-2.5 text-white/30 transition-transform duration-200 ${open ? '' : '-rotate-90'}`} />
       </div>
       {open && (
         <div className="px-3.5 pb-2.5">

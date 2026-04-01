@@ -1,3 +1,5 @@
+import Button from '../atoms/Button';
+import SwapIcon from '../atoms/icons/SwapIcon';
 import ColorPicker from './ColorPicker';
 
 export default function ColorSwapPair({ labelA, labelB, valueA, valueB, onChange }) {
@@ -15,13 +17,14 @@ export default function ColorSwapPair({ labelA, labelB, valueA, valueB, onChange
         />
       </div>
       <div className="flex items-center justify-center pb-[2px]">
-        <button
+        <Button
+          variant="subtle"
+          size="icon-sm"
           onClick={handleSwap}
-          className="w-[22px] h-[22px] rounded-full border border-white/18 bg-surface text-white/86 text-xs leading-none cursor-pointer hover:bg-surface-active hover:text-white"
           title="Swap colors"
         >
-          ⇄
-        </button>
+          <SwapIcon />
+        </Button>
       </div>
       <div>
         <ColorPicker

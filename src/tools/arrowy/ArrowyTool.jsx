@@ -1,13 +1,45 @@
 import { useState, useCallback, useRef, useEffect, useLayoutEffect, useMemo } from 'react';
 import ArrowyPanel from './ArrowyPanel';
-import { CodeModal } from '../../components/Modal';
-import { useToast } from '../../components/Toast';
+import { CodeModal } from '../../components/organisms/Modal';
+import { useToast } from '../../components/organisms/Toast';
 import {
   PARAM_KEYS, PARAM_GROUPS, ANCHOR_POINT_RATIOS,
   computePath, computeArrow, getEndpointAnchorBase, getControlAnchor,
 } from './useArrowyRenderer';
 import { generateJS, generateMinifiedJS } from './codegen';
-import { usePanelCollapsed, PANEL_WIDTH } from '../../components/Panel';
+import { usePanelCollapsed, PANEL_WIDTH } from '../../components/organisms/Panel';
+
+function buildArrowyDemoHtml(state) {
+  const code = generateJS(state);
+  const bg = state.features?.theme === 'light'
+    ? 'background: linear-gradient(135deg, #f4f7ff, #eef3ff, #e7eefb); color: #1a1a2e;'
+    : 'background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); color: #e0e0e0;';
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arrowy \u2013 Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; ${bg} font-family: -apple-system, sans-serif; }
+    .box { position: absolute; width: 140px; height: 90px; border-radius: 24px; backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 14px; opacity: 0.8; }
+  </style>
+</head>
+<body>
+  <div id="start" class="box" style="right:80px;top:calc(50% + 80px)">Start</div>
+  <div id="end" class="box" style="left:80px;top:calc(50% - 160px)">End</div>
+
+  <script type="module">
+${code}
+createLeaderLine(
+  document.getElementById('start'),
+  document.getElementById('end')
+);
+  </script>
+</body>
+</html>`;
+}
 
 const STORAGE_KEY = 'arrowy_state';
 
@@ -344,6 +376,15 @@ export default function ArrowyTool() {
         title="Generated Code"
         readableCode={codeModalOpen ? generateReadableJSFromState() : ''}
         minifiedCode={codeModalOpen ? () => generateMinifiedJSFromState() : undefined}
+        instructions={
+          <ol className="list-decimal list-inside space-y-2">
+            <li>Save the code below as a <code className="bg-white/8 px-1.5 py-0.5 rounded text-[12px] font-mono text-white/90">.js</code> file in your project, e.g. <code className="bg-white/8 px-1.5 py-0.5 rounded text-[12px] font-mono text-white/90">leader-line.js</code></li>
+            <li>Add this right before the closing <code className="bg-white/8 px-1.5 py-0.5 rounded text-[12px] font-mono text-white/90">{'</body>'}</code> tag in your HTML:</li>
+            <pre className="bg-white/5 rounded px-3 py-2 ml-5 font-mono text-[12px] text-white/80 leading-relaxed whitespace-pre">{'<script type="module">\n  import { createLeaderLine } from \'./leader-line.js\';\n  createLeaderLine(\n    document.getElementById(\'start\'),\n    document.getElementById(\'end\')\n  );\n</script>'}</pre>
+            <li>Replace <code className="bg-white/8 px-1.5 py-0.5 rounded text-[12px] font-mono text-white/90">#start</code> and <code className="bg-white/8 px-1.5 py-0.5 rounded text-[12px] font-mono text-white/90">#end</code> with the IDs of the two elements you want the arrow to connect.</li>
+          </ol>
+        }
+        demoHtml={codeModalOpen ? () => buildArrowyDemoHtml({ values, features, breakpoints, style, draw }) : undefined}
       />
     </div>
   );

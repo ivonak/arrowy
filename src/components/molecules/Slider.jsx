@@ -1,6 +1,9 @@
 import { useCallback, useRef } from 'react';
+import Button from '../atoms/Button';
+import Input from '../atoms/Input';
+import ResetIcon from '../atoms/icons/ResetIcon';
 
-export default function Slider({ label, value, min, max, step, onChange, unit }) {
+export default function Slider({ label, value, min, max, step, onChange, unit, defaultValue }) {
   const numRef = useRef(null);
 
   const handleRange = useCallback((e) => {
@@ -15,22 +18,36 @@ export default function Slider({ label, value, min, max, step, onChange, unit })
     }
   }, [onChange, min, max]);
 
+  const canReset = defaultValue !== undefined && value !== defaultValue;
+
   return (
-    <div className="pb-2">
-      <div className="flex items-center justify-between mb-[2px]">
+    <div className="pb-4">
+      <div className="flex items-center justify-between">
         {label && (
           <label className="text-[11px] text-text-dim">{label}</label>
         )}
         <div className="flex items-center gap-1">
-          <input
+          {defaultValue !== undefined && (
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              onClick={() => canReset && onChange?.(defaultValue)}
+              title={canReset ? `Reset to ${defaultValue}` : 'At default'}
+              disabled={!canReset}
+              tabIndex={-1}
+            >
+              <ResetIcon />
+            </Button>
+          )}
+          <Input
             ref={numRef}
-            type="number"
+            type="text"
             min={min}
             max={max}
             step={step}
             value={value}
             onChange={handleNumber}
-            className="w-[52px] bg-surface border border-panel-border rounded text-text text-[11px] px-[5px] py-[3px] text-center shrink-0 outline-none focus:border-accent-border"
+            className="w-12 shrink-0"
           />
           {unit && (
             <span className="text-[10px] text-text-muted shrink-0">{unit}</span>
@@ -44,7 +61,7 @@ export default function Slider({ label, value, min, max, step, onChange, unit })
         step={step}
         value={value}
         onChange={handleRange}
-        className="w-full"
+        className="w-full mt-2.5 block"
       />
     </div>
   );

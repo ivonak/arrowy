@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+    /* Paste the CSS from above here */
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+    }
+    .mesh-gradient {
+  /* Set dimensions as needed */
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  
+  /* Base background color (soft white/blue) */
+  background-color: #f2f5f9;
+  
+  /* Layered radial gradients to create the "blobs" of color */
+  background-image:
+    radial-gradient(at 68% 54%, rgba(242, 187, 162, 0.75) 0px, transparent 50%), /* Center-right peach */
+    radial-gradient(at 82% 10%, rgba(165, 195, 225, 0.8) 0px, transparent 50%),  /* Top-right blue */
+    radial-gradient(at 20% 15%, rgba(190, 210, 235, 0.6) 0px, transparent 50%),  /* Top-left pale blue */
+    radial-gradient(at 85% 90%, rgba(215, 210, 225, 0.7) 0px, transparent 50%),  /* Bottom-right lavender/grey */
+    radial-gradient(at 10% 90%, rgba(235, 225, 220, 0.6) 0px, transparent 50%),  /* Bottom-left cream */
+    radial-gradient(at 40% 45%, rgba(255, 255, 255, 0.9) 0px, transparent 40%);  /* Bright white center highlight */
+    
+  /* Ensures the background covers the area smoothly */
+  background-size: cover;
+  background-position: center;
+}
+  </style>
+</head>
+
+<body>
+  <div class="mesh-gradient"></div>
+</body>
+
+</html>

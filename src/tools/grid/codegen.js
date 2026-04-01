@@ -73,9 +73,10 @@ export function createGridBackground(container, options = {}) {
 
   function clamp(n, lo, hi) { return Math.min(hi, Math.max(lo, n)); }
 
+  container.style.cssText += ';position:fixed;inset:0;';
+
   const canvas = document.createElement('canvas');
   canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;';
-  container.style.position = container.style.position || 'relative';
   container.appendChild(canvas);
 
   const gl = canvas.getContext('webgl', { antialias: true, alpha: true, premultipliedAlpha: false });

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gradient Analysis</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #111;
+      padding: 40px;
+      gap: 24px;
+      font-family: -apple-system, system-ui, sans-serif;
+      color: #fff;
+    }
+
+    h2 {
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0.5;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .swatch {
+      width: min(1024px, 90vw);
+      aspect-ratio: 1024 / 640;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .reference {
+      background: url('/assets/47-109e6ff4-32be-4c2a-a09a-5dc46d1b0be2.png') center/cover;
+    }
+
+    /*
+     * ====================================================
+     * GRADIENT DECOMPOSITION — 9 LAYERS
+     * ====================================================
+     *
+     * Layer order (CSS paints first-listed on top):
+     *  1  Blue corner cloud (top-left anchor)
+     *  2  Blue top-edge band (stretches right along top)
+     *  3  Blue left-edge tail (extends blue down left side)
+     *  4  Peach/salmon orb (center-right warm focus)
+     *  5  Pink halo around peach (wider soft glow)
+     *  6  Lavender accent (right edge)
+     *  7  Bright center wash (the "light source")
+     *  8  Subtle pink floor (bottom area warmth)
+     *  9  Base linear gradient (overall temperature map)
+     */
+    .recreation {
+      background:
+        /* 1 — Blue corner cloud: large ellipse anchored top-left */
+        radial-gradient(
+          ellipse 52% 58% at 6% 10%,
+          rgba(100, 155, 205, 0.82) 0%,
+          rgba(120, 168, 215, 0.50) 28%,
+          rgba(150, 185, 220, 0.18) 55%,
+          transparent 78%
+        ),
+
+        /* 2 — Blue top band: wide shallow ellipse along top edge */
+        radial-gradient(
+          ellipse 52% 14% at 32% -1%,
+          rgba(145, 180, 218, 0.55) 0%,
+          rgba(165, 195, 225, 0.20) 55%,
+          transparent 85%
+        ),
+
+        /* 3 — Blue left tail: blue continues down left edge */
+        radial-gradient(
+          ellipse 14% 42% at -1% 48%,
+          rgba(120, 170, 215, 0.38) 0%,
+          rgba(140, 180, 215, 0.12) 55%,
+          transparent 80%
+        ),
+
+        /* 4 — Peach orb: the warm focal point */
+        radial-gradient(
+          ellipse 22% 26% at 63% 37%,
+          rgba(212, 148, 115, 0.72) 0%,
+          rgba(218, 162, 135, 0.40) 38%,
+          rgba(225, 185, 168, 0.12) 62%,
+          transparent 82%
+        ),
+
+        /* 5 — Pink halo: wider glow surrounding peach */
+        radial-gradient(
+          ellipse 34% 38% at 60% 40%,
+          rgba(215, 172, 160, 0.30) 0%,
+          rgba(212, 182, 178, 0.12) 50%,
+          transparent 78%
+        ),
+
+        /* 6 — Lavender right edge */
+        radial-gradient(
+          ellipse 14% 38% at 97% 50%,
+          rgba(168, 148, 192, 0.42) 0%,
+          rgba(180, 162, 200, 0.15) 52%,
+          transparent 80%
+        ),
+
+        /* 7 — Bright center wash: the luminous core */
+        radial-gradient(
+          ellipse 42% 48% at 36% 60%,
+          rgba(242, 235, 230, 0.92) 0%,
+          rgba(240, 234, 228, 0.50) 35%,
+          rgba(238, 230, 225, 0.15) 60%,
+          transparent 78%
+        ),
+
+        /* 8 — Pink floor: subtle warmth in bottom half */
+        radial-gradient(
+          ellipse 65% 30% at 48% 88%,
+          rgba(218, 205, 212, 0.22) 0%,
+          transparent 68%
+        ),
+
+        /* 9 — Base: overall temperature gradient (cool-left → warm-center → cool-right) */
+        linear-gradient(
+          150deg,
+          #b4c8e0 0%,
+          #d2c6d2 18%,
+          #e4dad6 34%,
+          #ece4e0 48%,
+          #e8dcd8 62%,
+          #ddd0da 78%,
+          #d5c8d5 100%
+        );
+    }
+  </style>
+</head>
+<body>
+  <h2>Reference</h2>
+  <div class="swatch reference"></div>
+
+  <h2>CSS Recreation</h2>
+  <div class="swatch recreation"></div>
+</body>
+</html>

@@ -28,11 +28,8 @@ export default function ColorPicker({ label, value, onChange }) {
   }, [open]);
 
   return (
-    <div className="flex items-center justify-between mb-[6px]" ref={wrapRef}>
-      {label && (
-        <label className="text-[11px] text-text-dim">{label}</label>
-      )}
-      <div className="relative" onClick={handleSwatchClick}>
+    <div className="flex items-center justify-between gap-1.5" ref={wrapRef}>
+      <div className="relative flex" onClick={handleSwatchClick}>
         <input
           ref={inputRef}
           type="color"
@@ -42,6 +39,9 @@ export default function ColorPicker({ label, value, onChange }) {
           tabIndex={-1}
         />
       </div>
+      {label && (
+        <label className="text-[11px] text-text-dim">{label}</label>
+      )}
     </div>
   );
 }

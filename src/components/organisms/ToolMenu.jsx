@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 const TOOLS = [
   { path: '/arrowy', label: 'Arrowy' },
   { path: '/grid', label: 'Grid' },
+  { path: '/bg-grain', label: 'BG Grain' },
+  { path: '/learning', label: 'Learning' },
 ];
 
 export default function ToolMenu() {

@@ -1,9 +1,9 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import useGridRenderer from './useGridRenderer';
 import GridPanel from './GridPanel';
-import { CodeModal } from '../../components/Modal';
-import { useToast } from '../../components/Toast';
-import { usePanelCollapsed, PANEL_WIDTH } from '../../components/Panel';
+import { CodeModal } from '../../components/organisms/Modal';
+import { useToast } from '../../components/organisms/Toast';
+import { usePanelCollapsed, PANEL_WIDTH } from '../../components/organisms/Panel';
 import { generateReadableJS, generateMinifiedJS } from './codegen';
 
 const STORAGE_KEY = 'grid_playground_settings_v1';
@@ -79,6 +79,27 @@ function loadPresets() {
 
 function savePresets(items) {
   try { localStorage.setItem(PRESETS_KEY, JSON.stringify(items)); } catch {}
+}
+
+function buildGridDemoHtml(config) {
+  const code = generateReadableJS(config);
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grid \u2013 Demo</title>
+  <style>* { margin: 0; padding: 0; box-sizing: border-box; } html { height: 100%; background: linear-gradient(135deg, ${config.bgStart} 0%, ${config.bgMid} 50%, ${config.bgEnd} 100%); } body { height: 100%; }</style>
+</head>
+<body>
+  <div id="grid"></div>
+
+  <script type="module">
+${code}
+createGridBackground(document.getElementById('grid'));
+  </script>
+</body>
+</html>`;
 }
 
 export default function GridTool() {
@@ -166,6 +187,7 @@ export default function GridTool() {
         config={config}
         onChange={handleChange}
         onReset={handleReset}
+        onGetCode={() => setCodeModalOpen(true)}
         onRegenBlob={handleRegenBlob}
         presets={presets}
         activePresetId={activePresetId}
@@ -181,6 +203,15 @@ export default function GridTool() {
         title="Generated Code"
         readableCode={generateReadableJS(config)}
         minifiedCode={() => generateMinifiedJS(config)}
+        instructions={
+          <ol className="list-decimal list-inside space-y-2">
+            <li>Save the code below as a <code className="bg-white/8 px-1.5 py-0.5 rounded text-[12px] font-mono text-white/90">.js</code> file in your project, e.g. <code className="bg-white/8 px-1.5 py-0.5 rounded text-[12px] font-mono text-white/90">grid-bg.js</code></li>
+            <li>Add this right before the closing <code className="bg-white/8 px-1.5 py-0.5 rounded text-[12px] font-mono text-white/90">{'</body>'}</code> tag in your HTML:</li>
+            <pre className="bg-white/5 rounded px-3 py-2 ml-5 font-mono text-[12px] text-white/80 leading-relaxed whitespace-pre">{'<div id="grid"></div>\n\n<script type="module">\n  import { createGridBackground } from \'./grid-bg.js\';\n  createGridBackground(document.getElementById(\'grid\'));\n</script>'}</pre>
+            <li>The effect will fill the whole page as a background.</li>
+          </ol>
+        }
+        demoHtml={() => buildGridDemoHtml(config)}
       />
     </div>
   );
